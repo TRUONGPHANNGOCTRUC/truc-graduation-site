@@ -92,7 +92,7 @@ export default function RSPVFormSection() {
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Gửi đến mình những lời iu thương nha, mình thích được iu thương :3"
+            placeholder="Gửi đến mình những lời iu thương nha, mình thích được iu thương 😊"
             rows={7}
             className="w-full px-4 py-2 rounded-lg border border-gray-300"
           />

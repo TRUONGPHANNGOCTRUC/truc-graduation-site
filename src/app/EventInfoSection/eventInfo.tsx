@@ -57,7 +57,7 @@ export default function EventInfoSection() {
               ),
             },
             {
-              icon: "🎀",
+              icon: "📞",
               title: "Liên hệ",
               content: (
                 <>

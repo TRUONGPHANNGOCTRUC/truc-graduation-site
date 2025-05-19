@@ -1,51 +1,80 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { ref, push, onValue, remove } from "firebase/database"
+import { db } from '@/lib/firebase'
 
 export default function RSPVFormSection() {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<{ name: string; message: string }[]>([])
-  const [passwordPrompt, setPasswordPrompt] = useState<{ show: boolean; index: number | null }>({ show: false, index: null })
+  const [messages, setMessages] = useState<{ key: string; name: string; message: string }[]>([])
+  const [passwordPrompt, setPasswordPrompt] = useState(false)
   const [passwordInput, setPasswordInput] = useState('')
+  const [deleteKey, setDeleteKey] = useState<string | null>(null)
 
-  const PASSWORD = 'chukkuSuperSecret123' // Thay mật khẩu ở đây nhé
-  type Message = {
-    name: string
-    message: string
-  }
+  const PASSWORD = 'chukkuSuperSecret123'
+
+  useEffect(() => {
+    const messageRef = ref(db, "messages")
+    const listener = onValue(messageRef, (snapshot) => {
+      const data = snapshot.val()
+      if (data) {
+        const loadedMessages = Object.entries(data).map(([key, value]) => ({
+          key,
+          ...(value as { name: string; message: string }),
+        }))
+        setMessages(loadedMessages.reverse())
+      } else {
+        setMessages([])
+      }
+    })
+
+    return () => {
+      // Firebase onValue doesn't require manual cleanup here
+    }
+  }, [])
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!name || !message) return
-    setMessages(prev => [...prev, { name, message }])
-    setName('')
-    setMessage('')
+
+    const messageRef = ref(db, "messages")
+    push(messageRef, { name, message })
+
+    setName("")
+    setMessage("")
   }
-  const handleDeleteClick = (index: number) => {
-    setPasswordPrompt({ show: true, index })
+
+  const handleDeleteClick = (key: string) => {
+    setPasswordPrompt(true)
     setPasswordInput('')
+    setDeleteKey(key)
   }
-  const chunkArray = (arr: Message[], chunkSize: number) => {
-    const chunks = []
-    for (let i = 0; i < arr.length; i += chunkSize) {
-      chunks.push(arr.slice(i, i + chunkSize))
-    }
-    return chunks
-  }
-  
+
   const handleConfirmDelete = () => {
-    if (passwordInput === PASSWORD && passwordPrompt.index !== null) {
-      setMessages(prev => prev.filter((_, i) => i !== passwordPrompt.index))
-      setPasswordPrompt({ show: false, index: null })
+    if (passwordInput === PASSWORD && deleteKey) {
+      const messageRef = ref(db, `messages/${deleteKey}`)
+      remove(messageRef)
+      setPasswordPrompt(false)
       setPasswordInput('')
+      setDeleteKey(null)
     } else {
       alert('Mật khẩu không đúng, bạn không thể xóa lời chúc này!')
     }
   }
 
   const handleCancelDelete = () => {
-    setPasswordPrompt({ show: false, index: null })
+    setPasswordPrompt(false)
     setPasswordInput('')
+    setDeleteKey(null)
+  }
+
+  const chunkArray = (arr: typeof messages, chunkSize: number) => {
+    const chunks = []
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      chunks.push(arr.slice(i, i + chunkSize))
+    }
+    return chunks
   }
 
   return (
@@ -63,7 +92,7 @@ export default function RSPVFormSection() {
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Lời chúc gửi đến Ngọc Trúc"
+            placeholder="Gửi đến mình những lời iu thương nha, mình thích được iu thương :3"
             rows={7}
             className="w-full px-4 py-2 rounded-lg border border-gray-300"
           />
@@ -82,31 +111,29 @@ export default function RSPVFormSection() {
             ✨ Hãy là người đầu tiên gửi lời chúc cho mình nhé! ✨
           </p>
         ) : (
-        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {chunkArray(messages, 10).slice(0, 5).map((group, groupIndex) => (
-                <div key={groupIndex} className="animate-marquee whitespace-nowrap flex items-center gap-6">
-                {group.map((msg, index) => (
-                    <span key={index} className="mx-4 text-pink-700 font-medium inline-flex items-center gap-2">
+              <div key={groupIndex} className="animate-marquee whitespace-nowrap flex items-center gap-6">
+                {group.map((msg) => (
+                  <span key={msg.key} className="mx-4 text-pink-700 font-medium inline-flex items-center gap-2">
                     💌 <strong>{msg.name}:</strong> {msg.message}
                     <button
-                        onClick={() => handleDeleteClick(groupIndex * 10 + index)}
-                        className="text-pink-600 hover:text-pink-800 font-bold text-sm cursor-pointer select-none"
-                        title="Xóa lời chúc"
-                        type="button"
+                      onClick={() => handleDeleteClick(msg.key)}
+                      className="text-pink-600 hover:text-pink-800 font-bold text-sm cursor-pointer select-none"
+                      title="Xóa lời chúc"
+                      type="button"
                     >
-                        ❌
+                      ❌
                     </button>
-                    </span>
+                  </span>
                 ))}
-                </div>
+              </div>
             ))}
-            </div>
-
+          </div>
         )}
       </div>
 
-      {/* Popup nhập mật khẩu */}
-      {passwordPrompt.show && (
+      {passwordPrompt && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center shadow-lg">
             <h3 className="text-lg font-semibold mb-4 text-pink-600">Nhập mật khẩu để xóa lời chúc</h3>
@@ -140,19 +167,12 @@ export default function RSPVFormSection() {
           0% { transform: translateX(100%); }
           100% { transform: translateX(-100%); }
         }
-        // .animate-marquee {
-        //   display: inline-block;
-        //   animation: marquee 20s linear infinite;
-        //   white-space: nowrap;
-        // }
-          .animate-marquee {
-  animation: marquee 20s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
+        }
       `}</style>
     </section>
   )

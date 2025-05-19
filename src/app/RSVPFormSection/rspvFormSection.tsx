@@ -10,7 +10,10 @@ export default function RSPVFormSection() {
   const [passwordInput, setPasswordInput] = useState('')
 
   const PASSWORD = 'chukkuSuperSecret123' // Thay mật khẩu ở đây nhé
-
+  type Message = {
+    name: string
+    message: string
+  }
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!name || !message) return
@@ -18,13 +21,11 @@ export default function RSPVFormSection() {
     setName('')
     setMessage('')
   }
-const [isStaticView, setIsStaticView] = useState(false)
-
   const handleDeleteClick = (index: number) => {
     setPasswordPrompt({ show: true, index })
     setPasswordInput('')
   }
-  const chunkArray = (arr: any[], chunkSize: number) => {
+  const chunkArray = (arr: Message[], chunkSize: number) => {
     const chunks = []
     for (let i = 0; i < arr.length; i += chunkSize) {
       chunks.push(arr.slice(i, i + chunkSize))
@@ -81,40 +82,25 @@ const [isStaticView, setIsStaticView] = useState(false)
             ✨ Hãy là người đầu tiên gửi lời chúc cho mình nhé! ✨
           </p>
         ) : (
-        //   <div className="animate-marquee whitespace-nowrap flex items-center gap-6">
-        //     {messages.map((msg, index) => (
-        //       <span key={index} className="mx-4 text-pink-700 font-medium inline-flex items-center gap-2">
-        //         💌 <strong>{msg.name}:</strong> {msg.message}
-        //         <button
-        //           onClick={() => handleDeleteClick(index)}
-        //           className="text-pink-600 hover:text-pink-800 font-bold text-sm cursor-pointer select-none"
-        //           title="Xóa lời chúc"
-        //           type="button"
-        //         >
-        //           ❌
-        //         </button>
-        //       </span>
-        //     ))}
-        //   </div>
         <div className="flex flex-col gap-4">
-  {chunkArray(messages, 10).slice(0, 5).map((group, groupIndex) => (
-    <div key={groupIndex} className="animate-marquee whitespace-nowrap flex items-center gap-6">
-      {group.map((msg, index) => (
-        <span key={index} className="mx-4 text-pink-700 font-medium inline-flex items-center gap-2">
-          💌 <strong>{msg.name}:</strong> {msg.message}
-          <button
-            onClick={() => handleDeleteClick(groupIndex * 10 + index)}
-            className="text-pink-600 hover:text-pink-800 font-bold text-sm cursor-pointer select-none"
-            title="Xóa lời chúc"
-            type="button"
-          >
-            ❌
-          </button>
-        </span>
-      ))}
-    </div>
-  ))}
-</div>
+            {chunkArray(messages, 10).slice(0, 5).map((group, groupIndex) => (
+                <div key={groupIndex} className="animate-marquee whitespace-nowrap flex items-center gap-6">
+                {group.map((msg, index) => (
+                    <span key={index} className="mx-4 text-pink-700 font-medium inline-flex items-center gap-2">
+                    💌 <strong>{msg.name}:</strong> {msg.message}
+                    <button
+                        onClick={() => handleDeleteClick(groupIndex * 10 + index)}
+                        className="text-pink-600 hover:text-pink-800 font-bold text-sm cursor-pointer select-none"
+                        title="Xóa lời chúc"
+                        type="button"
+                    >
+                        ❌
+                    </button>
+                    </span>
+                ))}
+                </div>
+            ))}
+            </div>
 
         )}
       </div>

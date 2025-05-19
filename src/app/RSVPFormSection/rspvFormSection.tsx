@@ -16,7 +16,7 @@ export default function RSPVFormSection() {
 
   useEffect(() => {
     const messageRef = ref(db, "messages")
-    const listener = onValue(messageRef, (snapshot) => {
+    onValue(messageRef, (snapshot) => {
       const data = snapshot.val()
       if (data) {
         const loadedMessages = Object.entries(data).map(([key, value]) => ({

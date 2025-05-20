@@ -18,7 +18,7 @@ const cardVariants = {
 export default function EventInfoSection() {
   return (
     <motion.section
-      className="py-10 sm:py-16 md:py-20 px-4 bg-[url('/image.png')] bg-cover bg-center bg-fixed text-center relative"
+      className="py-10 sm:py-10 md:py-20 px-4 bg-[url('/image.png')] bg-cover bg-center bg-fixed text-center relative"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}

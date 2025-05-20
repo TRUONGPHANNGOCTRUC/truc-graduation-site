@@ -77,6 +77,7 @@ export default function RSPVFormSection() {
     return chunks
   }
 
+  
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 py-12 px-4 bg-pink-50 text-center font-[DancingScript] text-pink-600 relative">
       <div className="col-span-1 flex flex-col items-center">
@@ -168,7 +169,7 @@ export default function RSPVFormSection() {
           100% { transform: translateX(-100%); }
         }
         .animate-marquee {
-          animation: marquee 20s linear infinite;
+          animation: marquee 40s linear infinite;
         }
         .animate-marquee:hover {
           animation-play-state: paused;

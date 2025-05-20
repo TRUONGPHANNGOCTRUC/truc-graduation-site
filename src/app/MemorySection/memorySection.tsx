@@ -134,9 +134,9 @@ export default function MemorySection() {
       </div>
 
       {/* Manual scroll hint for mobile users */}
-      <p className="text-center text-xs sm:text-sm text-gray-500 mt-3 italic md:hidden">
+      {/* <p className="text-center text-xs sm:text-sm text-gray-500 mt-3 italic md:hidden">
         Vuốt sang để xem thêm kỷ niệm
-      </p>
+      </p> */}
 
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {

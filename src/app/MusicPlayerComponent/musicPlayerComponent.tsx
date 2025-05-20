@@ -62,7 +62,7 @@ export default function MusicPlayerComponent() {
           <span className="text-2xl sm:text-3xl">{isPlaying ? "🎵" : "🔇"}</span>
         </motion.button>
       </div>
-      <audio ref={audioRef} src="/backgroundMusic.mp3" loop />
+      <audio ref={audioRef} src="/songs-to-sing--dance.mp3" loop />
     </div>
   )
 }

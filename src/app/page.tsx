@@ -8,6 +8,7 @@ import CountDownSection from './CountDownSection/countdownSection';
 import MusicPlayerComponent from './MusicPlayerComponent/musicPlayerComponent';
 import SakuraFallComponent from './Component/SakuraComponent/SakuraComponent';
 import ThankyouSection from './Thankyou/thankyouSectioc';
+import GraduationMemorySection from './GraduationMemory/graduationMemory';
 export default function Home() {
   return (
     <div className=" w-full bg-white">
@@ -27,6 +28,7 @@ export default function Home() {
         <GoogleMapSection />
         <RSPVFormSection />
         <ThankyouSection/>
+        <GraduationMemorySection/>
       </main>
     </div>
   )

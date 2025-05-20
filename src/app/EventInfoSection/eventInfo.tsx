@@ -17,12 +17,12 @@ const cardVariants = {
 
 export default function EventInfoSection() {
   return (
-    <motion.section
+    <section
       className="py-10 sm:py-10 md:py-20 px-4 bg-[url('/image.png')] bg-cover bg-center bg-fixed text-center relative"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.3 }}
+      // initial={{ opacity: 0, y: 50 }}
+      // whileInView={{ opacity: 1, y: 0 }}
+      // transition={{ duration: 0.8, ease: "easeOut" }}
+      // viewport={{ once: true, amount: 0.3 }}
     >
 
       <div className="relative z-10">
@@ -95,6 +95,6 @@ export default function EventInfoSection() {
           ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
